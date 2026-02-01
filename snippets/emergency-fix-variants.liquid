@@ -1,0 +1,78 @@
+{% comment %}
+  CORREÇÃO EMERGENCIAL - Adicione este snippet temporariamente ao template do produto
+  {% render 'emergency-fix-variants' %}
+  
+  Este snippet vai:
+  1. Mostrar informações de debug
+  2. Desativar temporariamente o filtro se necessário
+{% endcomment %}
+
+<div style="background: #dc3545; color: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
+  <h3 style="margin: 0 0 10px 0;">🚨 CORREÇÃO EMERGENCIAL - Variantes</h3>
+  
+  {% if product %}
+    <p><strong>Status da Configuração:</strong> 
+      {% if settings.hide_sold_out_variants %}
+        ATIVADA (ocultando esgotados)
+      {% else %}
+        DESATIVADA (mostrando todos)
+      {% endif %}
+    </p>
+    
+    <p><strong>Produto:</strong> {{ product.title }}</p>
+    <p><strong>Variantes disponíveis:</strong> 
+      {% assign available_count = 0 %}
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          {% assign available_count = available_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      {{ available_count }} de {{ product.variants.size }}
+    </p>
+    
+    {% if available_count == 0 %}
+      <div style="background: rgba(255,255,255,0.2); padding: 10px; margin: 10px 0; border-radius: 3px;">
+        <strong>⚠️ PROBLEMA IDENTIFICADO:</strong><br>
+        Todas as variantes estão esgotadas! Por isso as cores sumiram.<br><br>
+        
+        <strong>SOLUÇÕES:</strong><br>
+        1. <strong>Rápida:</strong> Desative a funcionalidade em Admin → Temas → Personalizar → Produtos<br>
+        2. <strong>Correta:</strong> Adicione estoque às variantes em Admin → Produtos → {{ product.title }}
+      </div>
+    {% endif %}
+    
+    <details style="margin: 10px 0;">
+      <summary style="cursor: pointer; font-weight: bold;">🔍 Ver detalhes das variantes</summary>
+      <div style="background: rgba(255,255,255,0.1); padding: 10px; margin: 5px 0; border-radius: 3px; font-size: 11px;">
+        {% for variant in product.variants %}
+          <div style="margin: 2px 0;">
+            {{ variant.title }} - 
+            {% if variant.available %}
+              <span style="color: #90EE90;">✅ Disponível</span>
+            {% else %}
+              <span style="color: #FFB6C1;">❌ Esgotado</span>
+            {% endif %}
+            {% if variant.inventory_quantity %}
+              (Estoque: {{ variant.inventory_quantity }})
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </details>
+  {% endif %}
+</div>
+
+{% comment %}
+  CORREÇÃO TEMPORÁRIA: Se todas as variantes estão esgotadas, 
+  vamos forçar a exibição das opções para não quebrar o layout
+{% endcomment %}
+{% if product and available_count == 0 and settings.hide_sold_out_variants %}
+  <div style="background: #ffc107; color: #212529; padding: 10px; margin: 10px 0; border-radius: 5px;">
+    <strong>🔧 CORREÇÃO AUTOMÁTICA APLICADA:</strong><br>
+    Como todas as variantes estão esgotadas, estou temporariamente mostrando todas as opções para não quebrar o layout.
+    Para corrigir definitivamente, adicione estoque às variantes ou desative a funcionalidade.
+  </div>
+  
+  {% comment %}Forçar available_values para mostrar todas as opções quando tudo está esgotado{% endcomment %}
+  {% assign force_show_all = true %}
+{% endif %}

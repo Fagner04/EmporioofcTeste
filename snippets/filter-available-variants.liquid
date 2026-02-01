@@ -5,47 +5,61 @@
 {% endcomment %}
 
 {%- if settings.hide_sold_out_variants -%}
-  {%- comment -%}Filtrar apenas valores que têm pelo menos uma variante disponível{%- endcomment -%}
-  {%- assign available_values_string = '' -%}
-  
-  {%- for value in option.values -%}
-    {%- assign has_available_variant = false -%}
-    
-    {%- comment -%}Verificar se existe pelo menos uma variante disponível com este valor{%- endcomment -%}
-    {%- for variant in product.variants -%}
-      {%- assign variant_option_value = '' -%}
-      
-      {%- comment -%}Pegar o valor da opção para esta variante{%- endcomment -%}
-      {%- case option.position -%}
-        {%- when 1 -%}
-          {%- assign variant_option_value = variant.option1 -%}
-        {%- when 2 -%}
-          {%- assign variant_option_value = variant.option2 -%}
-        {%- when 3 -%}
-          {%- assign variant_option_value = variant.option3 -%}
-      {%- endcase -%}
-      
-      {%- comment -%}Se a variante tem este valor e está disponível{%- endcomment -%}
-      {%- if variant_option_value == value and variant.available -%}
-        {%- assign has_available_variant = true -%}
-        {%- break -%}
-      {%- endif -%}
-    {%- endfor -%}
-    
-    {%- comment -%}Se encontrou variante disponível, adicionar à lista{%- endcomment -%}
-    {%- if has_available_variant -%}
-      {%- if available_values_string != '' -%}
-        {%- assign available_values_string = available_values_string | append: ',' -%}
-      {%- endif -%}
-      {%- assign available_values_string = available_values_string | append: value -%}
+  {%- comment -%}Verificar se há pelo menos uma variante disponível no produto{%- endcomment -%}
+  {%- assign product_has_available_variants = false -%}
+  {%- for variant in product.variants -%}
+    {%- if variant.available -%}
+      {%- assign product_has_available_variants = true -%}
+      {%- break -%}
     {%- endif -%}
   {%- endfor -%}
   
-  {%- comment -%}Converter string em array{%- endcomment -%}
-  {%- if available_values_string != '' -%}
-    {%- assign available_values = available_values_string | split: ',' -%}
+  {%- comment -%}Se TODAS as variantes estão esgotadas, mostrar todas as opções para não quebrar o layout{%- endcomment -%}
+  {%- if product_has_available_variants == false -%}
+    {%- assign available_values = option.values -%}
   {%- else -%}
-    {%- assign available_values = '' | split: ',' -%}
+    {%- comment -%}Filtrar apenas valores que têm pelo menos uma variante disponível{%- endcomment -%}
+    {%- assign available_values_string = '' -%}
+    
+    {%- for value in option.values -%}
+      {%- assign has_available_variant = false -%}
+      
+      {%- comment -%}Verificar se existe pelo menos uma variante disponível com este valor{%- endcomment -%}
+      {%- for variant in product.variants -%}
+        {%- assign variant_option_value = '' -%}
+        
+        {%- comment -%}Pegar o valor da opção para esta variante{%- endcomment -%}
+        {%- case option.position -%}
+          {%- when 1 -%}
+            {%- assign variant_option_value = variant.option1 -%}
+          {%- when 2 -%}
+            {%- assign variant_option_value = variant.option2 -%}
+          {%- when 3 -%}
+            {%- assign variant_option_value = variant.option3 -%}
+        {%- endcase -%}
+        
+        {%- comment -%}Se a variante tem este valor e está disponível{%- endcomment -%}
+        {%- if variant_option_value == value and variant.available -%}
+          {%- assign has_available_variant = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      
+      {%- comment -%}Se encontrou variante disponível, adicionar à lista{%- endcomment -%}
+      {%- if has_available_variant -%}
+        {%- if available_values_string != '' -%}
+          {%- assign available_values_string = available_values_string | append: ',' -%}
+        {%- endif -%}
+        {%- assign available_values_string = available_values_string | append: value -%}
+      {%- endif -%}
+    {%- endfor -%}
+    
+    {%- comment -%}Converter string em array{%- endcomment -%}
+    {%- if available_values_string != '' -%}
+      {%- assign available_values = available_values_string | split: ',' -%}
+    {%- else -%}
+      {%- assign available_values = '' | split: ',' -%}
+    {%- endif -%}
   {%- endif -%}
 {%- else -%}
   {%- comment -%}Se não está filtrando, retornar todos os valores{%- endcomment -%}

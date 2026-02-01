@@ -1,0 +1,116 @@
+{% comment %}
+  Debug para identificar problema com variantes
+  Adicione {% render 'debug-variants-issue' %} na página do produto
+{% endcomment %}
+
+<div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+  <h3 style="color: #856404; margin: 0 0 10px 0;">🐛 DEBUG: Problema com Variantes</h3>
+  
+  <p><strong>Configuração:</strong> 
+    {% if settings.hide_sold_out_variants %}
+      <span style="color: red;">✅ ATIVADA</span> (pode estar causando o problema)
+    {% else %}
+      <span style="color: green;">❌ DESATIVADA</span> (funcionamento normal)
+    {% endif %}
+  </p>
+  
+  {% if product %}
+    <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 3px;">
+      <strong>📦 Produto:</strong> {{ product.title }}<br>
+      <strong>🔢 Total de variantes:</strong> {{ product.variants.size }}<br>
+      <strong>✅ Variantes disponíveis:</strong> 
+      {% assign available_count = 0 %}
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          {% assign available_count = available_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      {{ available_count }}
+    </div>
+    
+    <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 3px;">
+      <strong>📋 Lista de TODAS as variantes:</strong><br>
+      {% for variant in product.variants %}
+        <div style="margin: 3px 0; padding: 3px; {% if variant.available %}background: #d4edda;{% else %}background: #f8d7da;{% endif %}">
+          {{ forloop.index }}. {{ variant.title }} - 
+          {% if variant.available %}
+            <span style="color: green;">✅ DISPONÍVEL</span>
+          {% else %}
+            <span style="color: red;">❌ ESGOTADO</span>
+          {% endif %}
+          (ID: {{ variant.id }})
+        </div>
+      {% endfor %}
+    </div>
+    
+    {% if product.options_with_values.size > 0 %}
+      <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 3px;">
+        <strong>🎨 Análise por Opção:</strong><br>
+        {% for option in product.options_with_values %}
+          <div style="margin: 10px 0; padding: 8px; background: #f8f9fa; border-radius: 3px;">
+            <strong>{{ option.name }} (Posição {{ option.position }}):</strong><br>
+            
+            <div style="margin: 5px 0;">
+              <em>Todos os valores ({{ option.values.size }}):</em><br>
+              {% for value in option.values %}
+                <span style="background: #e9ecef; padding: 2px 6px; margin: 2px; border-radius: 2px;">{{ value }}</span>
+              {% endfor %}
+            </div>
+            
+            <div style="margin: 5px 0;">
+              <em>Teste manual - valores com variantes disponíveis:</em><br>
+              {% for value in option.values %}
+                {% assign has_available = false %}
+                {% for variant in product.variants %}
+                  {% assign variant_option_value = '' %}
+                  {% case option.position %}
+                    {% when 1 %}
+                      {% assign variant_option_value = variant.option1 %}
+                    {% when 2 %}
+                      {% assign variant_option_value = variant.option2 %}
+                    {% when 3 %}
+                      {% assign variant_option_value = variant.option3 %}
+                  {% endcase %}
+                  
+                  {% if variant_option_value == value and variant.available %}
+                    {% assign has_available = true %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+                
+                {% if has_available %}
+                  <span style="background: #d4edda; padding: 2px 6px; margin: 2px; border-radius: 2px; color: #155724;">{{ value }} ✅</span>
+                {% else %}
+                  <span style="background: #f8d7da; padding: 2px 6px; margin: 2px; border-radius: 2px; color: #721c24;">{{ value }} ❌</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+            
+            <div style="margin: 5px 0;">
+              <em>Resultado do filtro:</em><br>
+              {% render 'filter-available-variants', option: option, product: product %}
+              {% if available_values.size > 0 %}
+                <span style="color: green;">({{ available_values.size }}) valores:</span>
+                {% for value in available_values %}
+                  <span style="background: #d1ecf1; padding: 2px 6px; margin: 2px; border-radius: 2px; color: #0c5460;">{{ value }}</span>
+                {% endfor %}
+              {% else %}
+                <span style="color: red;">❌ NENHUM VALOR DISPONÍVEL (por isso sumiram as cores!)</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    <div style="background: #d1ecf1; padding: 10px; margin: 10px 0; border-radius: 3px; color: #0c5460;">
+      <strong>🔧 SOLUÇÃO RÁPIDA:</strong><br>
+      1. Se todas as cores sumiram = todas as variantes estão esgotadas<br>
+      2. Vá no Admin → Produtos → {{ product.title }}<br>
+      3. Edite as variantes e marque algumas como "Rastrear quantidade" = SIM e "Quantidade" > 0<br>
+      4. OU desative a funcionalidade: Admin → Temas → Personalizar → Produtos → Desmarcar "Ocultar esgotados"
+    </div>
+  {% else %}
+    <p style="color: red;">⚠️ Este debug deve ser usado em uma página de produto</p>
+  {% endif %}
+</div>
