@@ -1,0 +1,17 @@
+{% comment %}
+  Teste rápido - adicione {% render 'quick-test-variants' %} em qualquer template de produto
+{% endcomment %}
+
+{% if product and product.options_with_values.size > 0 %}
+  <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; margin: 10px 0; font-size: 12px;">
+    <strong>🧪 Teste Variantes:</strong> 
+    Configuração: {% if settings.hide_sold_out_variants %}<span style="color: green;">ATIVADA</span>{% else %}<span style="color: red;">DESATIVADA</span>{% endif %}
+    
+    {% for option in product.options_with_values %}
+      <br><strong>{{ option.name }}:</strong> 
+      Total: {{ option.values.size }} | 
+      {% render 'filter-available-variants', option: option, product: product %}
+      Disponíveis: {{ available_values.size }}
+    {% endfor %}
+  </div>
+{% endif %}
