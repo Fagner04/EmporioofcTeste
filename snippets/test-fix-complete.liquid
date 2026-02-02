@@ -3,7 +3,7 @@
 {% endcomment %}
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; margin: 10px 0; border-radius: 10px; font-family: Arial, sans-serif;">
-  <h3 style="margin: 0 0 10px 0;">🎯 TESTE FINAL - Correção Completa</h3>
+  <h3 style="margin: 0 0 10px 0;">🎯 TESTE FINAL - Apenas Cores Filtradas</h3>
   
   {% if product %}
     <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 10px 0;">
@@ -18,18 +18,34 @@
     
     {% if product.options_with_values.size > 0 %}
       {% for option in product.options_with_values %}
+        {%- assign color_keywords = 'color,colour,couleur,cor,colore,modelo,farbe,색,色,カラー,färg,farve,Escolha Sua Cor' | split: ',' -%}
+        {%- assign downcase_option = option.name | downcase -%}
+        {%- assign is_color_option = false -%}
+        {%- if color_keywords contains downcase_option -%}
+          {%- assign is_color_option = true -%}
+        {%- endif -%}
+        
         <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 5px 0;">
-          <strong>{{ option.name }}:</strong><br>
+          <strong>{{ option.name }}:</strong>
+          {% if is_color_option %}
+            <span style="background: #ff9800; padding: 2px 6px; border-radius: 3px; font-size: 11px;">🎨 COR</span>
+          {% else %}
+            <span style="background: #9e9e9e; padding: 2px 6px; border-radius: 3px; font-size: 11px;">📏 OUTRO</span>
+          {% endif %}
+          <br>
           
           <div style="margin: 5px 0;">
             <em>Comportamento atual:</em><br>
-            {% if settings.hide_sold_out_variants %}
+            {% if settings.hide_sold_out_variants and is_color_option %}
               {%- render 'filter-available-variants', option: option, product: product -%}
               {%- assign values_to_show = available_values -%}
-              <span style="color: #ffeb3b;">🔥 FILTRANDO</span> - Mostrando apenas {{ values_to_show.size }} de {{ option.values.size }} valores
+              <span style="color: #ffeb3b;">🔥 FILTRANDO CORES</span> - Mostrando {{ values_to_show.size }} de {{ option.values.size }} valores
+            {% elsif settings.hide_sold_out_variants and is_color_option == false %}
+              {%- assign values_to_show = option.values -%}
+              <span style="color: #4caf50;">✅ NÃO FILTRANDO</span> - Mostrando todos os {{ values_to_show.size }} valores (não é cor)
             {% else %}
               {%- assign values_to_show = option.values -%}
-              <span style="color: #4caf50;">✅ NORMAL</span> - Mostrando todos os {{ values_to_show.size }} valores
+              <span style="color: #4caf50;">✅ NORMAL</span> - Mostrando todos os {{ values_to_show.size }} valores (config desativada)
             {% endif %}
           </div>
           
@@ -44,20 +60,20 @@
     {% endif %}
     
     <div style="background: rgba(76, 175, 80, 0.2); padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #4caf50;">
-      <strong>✅ STATUS:</strong><br>
+      <strong>✅ NOVO COMPORTAMENTO:</strong><br>
       {% if settings.hide_sold_out_variants %}
-        Funcionalidade ATIVA - Ocultando variantes esgotadas
+        🎨 <strong>CORES:</strong> Oculta apenas cores esgotadas<br>
+        📏 <strong>TAMANHOS/OUTROS:</strong> Mostra sempre todos os valores
       {% else %}
-        Funcionalidade DESATIVA - Mostrando todas as variantes (comportamento normal)
+        Funcionalidade desativada - mostra tudo normalmente
       {% endif %}
     </div>
     
     <div style="background: rgba(255, 193, 7, 0.2); padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #ffc107;">
       <strong>🧪 COMO TESTAR:</strong><br>
-      1. Ative/desative a configuração no admin<br>
-      2. Recarregue esta página<br>
-      3. Veja se o "Comportamento atual" muda<br>
-      4. Verifique se as bolinhas/tamanhos aparecem/somem conforme esperado
+      1. Verifique se opções marcadas como 🎨 COR estão sendo filtradas<br>
+      2. Verifique se opções marcadas como 📏 OUTRO mostram todos os valores<br>
+      3. Ative/desative a configuração e veja a diferença
     </div>
   {% else %}
     <p>⚠️ Este teste deve ser usado em uma página de produto</p>

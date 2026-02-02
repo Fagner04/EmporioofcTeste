@@ -669,8 +669,8 @@
       {
         "type": "checkbox",
         "id": "hide_sold_out_variants",
-        "label": "🔥 Ocultar cores e tamanhos esgotados",
-        "info": "NOVA FUNCIONALIDADE: Quando ativado, cores e tamanhos sem estoque não aparecerão nas opções do produto",
+        "label": "🎨 Ocultar apenas CORES esgotadas",
+        "info": "ATUALIZADO: Oculta apenas cores sem estoque. Tamanhos e outras opções sempre aparecem normalmente",
         "default": false
       },
       {

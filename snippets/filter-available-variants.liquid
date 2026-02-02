@@ -2,9 +2,19 @@
   Snippet para filtrar variantes disponíveis por opção
   Uso: {% render 'filter-available-variants', option: option, product: product %}
   Retorna: available_values (array com valores disponíveis)
+  NOVO: Só filtra CORES, não tamanhos
 {% endcomment %}
 
-{%- if settings.hide_sold_out_variants -%}
+{%- comment -%}Identificar se esta opção é uma COR{%- endcomment -%}
+{%- assign color_keywords = 'color,colour,couleur,cor,colore,modelo,farbe,색,色,カラー,färg,farve,Escolha Sua Cor' | split: ',' -%}
+{%- assign downcase_option = option.name | downcase -%}
+{%- assign is_color_option = false -%}
+{%- if color_keywords contains downcase_option -%}
+  {%- assign is_color_option = true -%}
+{%- endif -%}
+
+{%- if settings.hide_sold_out_variants and is_color_option -%}
+  {%- comment -%}FILTRAR apenas se for COR e configuração estiver ativa{%- endcomment -%}
   {%- comment -%}Verificar se há pelo menos uma variante disponível no produto{%- endcomment -%}
   {%- assign product_has_available_variants = false -%}
   {%- for variant in product.variants -%}
@@ -62,6 +72,6 @@
     {%- endif -%}
   {%- endif -%}
 {%- else -%}
-  {%- comment -%}Se não está filtrando, retornar todos os valores{%- endcomment -%}
+  {%- comment -%}Se não está filtrando OU não é cor, retornar todos os valores{%- endcomment -%}
   {%- assign available_values = option.values -%}
 {%- endif -%}
