@@ -7,13 +7,6 @@ If the product contains the special __gift tag, we prevent it to be completely a
     window.location.href = '/';
   </script>
 {%- else -%}
-  
-  {%- comment -%}EMERGÊNCIA - Diagnóstico do problema{%- endcomment -%}
-  {% render 'emergency-restore' %}
-  
-  {%- comment -%}TESTE TEMPORÁRIO - Remover após verificar se está funcionando{%- endcomment -%}
-  {% render 'test-fix-complete' %}
-  
   {% section 'product-template' %}
 
   <div id='Areviewsapp' class='page-full'>{%  render 'aliexpress_reviews' , product: product %}</div>					

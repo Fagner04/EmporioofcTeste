@@ -667,13 +667,6 @@
         "default": false
       },
       {
-        "type": "checkbox",
-        "id": "hide_sold_out_variants",
-        "label": "🎨 Ocultar apenas CORES esgotadas",
-        "info": "ATUALIZADO: Oculta apenas cores sem estoque. Tamanhos e outras opções sempre aparecem normalmente",
-        "default": false
-      },
-      {
         "type": "range",
         "id": "low_inventory_threshold",
         "label": "Limite de estoque baixo",

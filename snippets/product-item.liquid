@@ -209,15 +209,7 @@
               {%- assign variant_option = 'option' | append: forloop.index -%}
               {%- assign value_to_match = filtered_variant[variant_option] | default: option.selected_value -%}
 
-              {%- comment -%}Usar filtro apenas se a configuração estiver ativada{%- endcomment -%}
-              {%- if settings.hide_sold_out_variants -%}
-                {%- render 'filter-available-variants', option: option, product: product -%}
-                {%- assign values_to_use = available_values -%}
-              {%- else -%}
-                {%- assign values_to_use = option.values -%}
-              {%- endif -%}
-
-              {%- for value in values_to_use -%}
+              {%- for value in option.values -%}
                 {%- assign downcased_value = value | downcase -%}
                 {%- capture color_id -%}{{ color_name }}-{{ forloop.index }}{%- endcapture -%}
 

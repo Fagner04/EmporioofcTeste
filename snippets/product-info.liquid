@@ -291,15 +291,7 @@
                   <div class="color-swatch-list color-swatch-list--large">
                     {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
                     
-                    {%- comment -%}Usar filtro apenas se a configuração estiver ativada{%- endcomment -%}
-                    {%- if settings.hide_sold_out_variants -%}
-                      {%- render 'filter-available-variants', option: option, product: product -%}
-                      {%- assign values_to_use = available_values -%}
-                    {%- else -%}
-                      {%- assign values_to_use = option.values -%}
-                    {%- endif -%}
-                    
-                    {%- for value in values_to_use -%}
+                    {%- for value in option.values -%}
                       {%- assign downcased_value = value | downcase -%}
                       {%- capture color_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
 
@@ -469,15 +461,7 @@
                   <div class="variant-swatch-list">
                     {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
 
-                    {%- comment -%}Usar filtro apenas se a configuração estiver ativada{%- endcomment -%}
-                    {%- if settings.hide_sold_out_variants -%}
-                      {%- render 'filter-available-variants', option: option, product: product -%}
-                      {%- assign values_to_use = available_values -%}
-                    {%- else -%}
-                      {%- assign values_to_use = option.values -%}
-                    {%- endif -%}
-
-                    {%- for value in values_to_use -%}
+                    {%- for value in option.values -%}
                       {%- capture variant_swatch_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
 
                       {%- for variant in product.variants -%}
@@ -503,15 +487,7 @@
                   <span class="product-form__option-name text--strong">{{ option.name }}: <span class="product-form__selected-value">{{ option.selected_value }}</span></span>
 
                   <div class="block-swatch-list">
-                    {%- comment -%}Usar filtro apenas se a configuração estiver ativada{%- endcomment -%}
-                    {%- if settings.hide_sold_out_variants -%}
-                      {%- render 'filter-available-variants', option: option, product: product -%}
-                      {%- assign values_to_use = available_values -%}
-                    {%- else -%}
-                      {%- assign values_to_use = option.values -%}
-                    {%- endif -%}
-                    
-                    {%- for value in values_to_use -%}
+                    {%- for value in option.values -%}
                       {%- capture block_swatch_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
 
                       <div class="block-swatch">
@@ -529,15 +505,7 @@
                     {%- render 'icon', icon: 'arrow-bottom' -%}
 
                     <select class="product-form__single-selector" name="{{ option_name }}" id="{{ option_name }}" data-option-position="{{ option.position }}">
-                      {%- comment -%}Usar filtro apenas se a configuração estiver ativada{%- endcomment -%}
-                      {%- if settings.hide_sold_out_variants -%}
-                        {%- render 'filter-available-variants', option: option, product: product -%}
-                        {%- assign values_to_use = available_values -%}
-                      {%- else -%}
-                        {%- assign values_to_use = option.values -%}
-                      {%- endif -%}
-                      
-                      {%- for value in values_to_use -%}
+                      {%- for value in option.values -%}
                         <option value="{{ value | escape }}" {% if value == option.selected_value %}selected="selected"{% endif %}>{{ value }}</option>
                       {%- endfor -%}
                     </select>
