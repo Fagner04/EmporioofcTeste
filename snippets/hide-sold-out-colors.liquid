@@ -1,0 +1,51 @@
+{% comment %}
+  Snippet SIMPLES para ocultar apenas cores esgotadas
+  Uso: {% render 'hide-sold-out-colors', option: option, product: product %}
+  Retorna: filtered_values (array apenas com cores disponíveis)
+{% endcomment %}
+
+{%- comment -%}Verificar se é uma opção de COR{%- endcomment -%}
+{%- assign is_color = false -%}
+{%- assign option_name_lower = option.name | downcase -%}
+{%- if option_name_lower contains 'cor' or option_name_lower contains 'color' -%}
+  {%- assign is_color = true -%}
+{%- endif -%}
+
+{%- comment -%}Se for COR e configuração ativa, filtrar. Senão, mostrar todos{%- endcomment -%}
+{%- if is_color and settings.hide_sold_out_colors -%}
+  {%- assign filtered_values = '' -%}
+  
+  {%- for value in option.values -%}
+    {%- comment -%}Verificar se existe variante disponível com esta cor{%- endcomment -%}
+    {%- assign has_stock = false -%}
+    {%- for variant in product.variants -%}
+      {%- if variant.available -%}
+        {%- case option.position -%}
+          {%- when 1 -%}{%- if variant.option1 == value -%}{%- assign has_stock = true -%}{%- endif -%}
+          {%- when 2 -%}{%- if variant.option2 == value -%}{%- assign has_stock = true -%}{%- endif -%}
+          {%- when 3 -%}{%- if variant.option3 == value -%}{%- assign has_stock = true -%}{%- endif -%}
+        {%- endcase -%}
+      {%- endif -%}
+      {%- if has_stock -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+    
+    {%- comment -%}Se tem estoque, adicionar à lista{%- endcomment -%}
+    {%- if has_stock -%}
+      {%- if filtered_values == '' -%}
+        {%- assign filtered_values = value -%}
+      {%- else -%}
+        {%- assign filtered_values = filtered_values | append: '|' | append: value -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  
+  {%- comment -%}Converter para array{%- endcomment -%}
+  {%- if filtered_values != '' -%}
+    {%- assign filtered_values = filtered_values | split: '|' -%}
+  {%- else -%}
+    {%- assign filtered_values = option.values -%}
+  {%- endif -%}
+{%- else -%}
+  {%- comment -%}Não é cor OU configuração desativa = mostrar todos{%- endcomment -%}
+  {%- assign filtered_values = option.values -%}
+{%- endif -%}

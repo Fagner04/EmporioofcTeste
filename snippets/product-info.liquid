@@ -291,7 +291,10 @@
                   <div class="color-swatch-list color-swatch-list--large">
                     {%- capture option_name -%}option{{ option.position }}{%- endcapture -%}
                     
-                    {%- for value in option.values -%}
+                    {%- comment -%}NOVA FUNCIONALIDADE: Filtrar cores esgotadas{%- endcomment -%}
+                    {%- render 'hide-sold-out-colors', option: option, product: product -%}
+                    
+                    {%- for value in filtered_values -%}
                       {%- assign downcased_value = value | downcase -%}
                       {%- capture color_id -%}{{ option_name }}-{{ forloop.index }}{%- endcapture -%}
 

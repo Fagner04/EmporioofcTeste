@@ -1,0 +1,23 @@
+{% comment %}
+  Teste simples para cores - Adicione {% render 'test-colors-only' %} ao template
+{% endcomment %}
+
+<div style="background: #28a745; color: white; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px;">
+  <strong>🎨 TESTE: Ocultar Cores Esgotadas</strong><br>
+  
+  Configuração: {% if settings.hide_sold_out_colors %}<span style="background: rgba(255,255,255,0.3); padding: 2px 6px; border-radius: 3px;">✅ ATIVA</span>{% else %}<span style="background: rgba(255,255,255,0.3); padding: 2px 6px; border-radius: 3px;">❌ DESATIVA</span>{% endif %}<br>
+  
+  {% if product.options_with_values.size > 0 %}
+    {% for option in product.options_with_values %}
+      {%- assign option_name_lower = option.name | downcase -%}
+      {%- if option_name_lower contains 'cor' or option_name_lower contains 'color' -%}
+        <strong>{{ option.name }}:</strong> 
+        {%- render 'hide-sold-out-colors', option: option, product: product -%}
+        Mostrando {{ filtered_values.size }} de {{ option.values.size }} cores
+        {% if settings.hide_sold_out_colors %}(filtrado){% else %}(normal){% endif %}<br>
+      {% else %}
+        <strong>{{ option.name }}:</strong> {{ option.values.size }} valores (não filtrado)<br>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</div>
