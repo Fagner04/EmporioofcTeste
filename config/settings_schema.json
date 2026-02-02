@@ -667,6 +667,13 @@
         "default": false
       },
       {
+        "type": "checkbox",
+        "id": "hide_sold_out_variants",
+        "label": "🔥 Ocultar cores e tamanhos esgotados",
+        "info": "NOVA FUNCIONALIDADE: Quando ativado, cores e tamanhos sem estoque não aparecerão nas opções do produto",
+        "default": false
+      },
+      {
         "type": "range",
         "id": "low_inventory_threshold",
         "label": "Limite de estoque baixo",
@@ -681,17 +688,6 @@
         "id": "show_reviews_badge",
         "label": "Mostrar selo de comentários",
         "info": "Você precisa instalar o [Shopify's free Product Reviews](https:\/\/apps.shopify.com\/product-reviews) caso queira o padrão da Shopify.",
-        "default": false
-      },
-      {
-        "type": "header",
-        "content": "Variantes Esgotadas"
-      },
-      {
-        "type": "checkbox",
-        "id": "hide_sold_out_variants",
-        "label": "Ocultar cores e tamanhos esgotados",
-        "info": "Quando ativado, cores e tamanhos sem estoque não aparecerão nas opções do produto",
         "default": false
       }
     ]

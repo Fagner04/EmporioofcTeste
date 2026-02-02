@@ -1,0 +1,40 @@
+{% comment %}
+  Teste para verificar se a configuração está visível
+  Adicione {% render 'test-config-visibility' %} em qualquer template
+{% endcomment %}
+
+<div style="background: #e3f2fd; border: 2px solid #2196f3; padding: 15px; margin: 10px 0; border-radius: 8px; font-family: Arial, sans-serif;">
+  <h3 style="color: #1976d2; margin: 0 0 10px 0;">🔧 TESTE: Configuração Visível?</h3>
+  
+  <div style="background: white; padding: 10px; border-radius: 5px; margin: 10px 0;">
+    <strong>Status da Configuração:</strong><br>
+    {% if settings.hide_sold_out_variants %}
+      <span style="color: green; font-size: 16px;">✅ ATIVADA</span> - A configuração existe e está ligada
+    {% elsif settings.hide_sold_out_variants == false %}
+      <span style="color: orange; font-size: 16px;">⚠️ DESATIVADA</span> - A configuração existe mas está desligada
+    {% else %}
+      <span style="color: red; font-size: 16px;">❌ NÃO ENCONTRADA</span> - A configuração não existe
+    {% endif %}
+  </div>
+  
+  <div style="background: #fff3e0; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #ff9800;">
+    <strong>📍 ONDE ENCONTRAR:</strong><br>
+    1. Admin → Temas → Personalizar<br>
+    2. Configurações do tema → Produtos<br>
+    3. Procure por: <strong>"🔥 Ocultar cores e tamanhos esgotados"</strong><br>
+    4. Deve estar logo após "Mostrar inventário"
+  </div>
+  
+  <div style="background: #f3e5f5; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #9c27b0;">
+    <strong>🔄 SE NÃO APARECER:</strong><br>
+    1. Feche o painel de personalização<br>
+    2. Reabra: Admin → Temas → Personalizar<br>
+    3. Vá em Configurações do tema → Produtos<br>
+    4. A opção deve aparecer agora
+  </div>
+  
+  <div style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #4caf50;">
+    <strong>✅ TESTE RÁPIDO:</strong><br>
+    Se você conseguir ativar/desativar a opção no admin, o valor aqui em cima deve mudar entre "ATIVADA" e "DESATIVADA".
+  </div>
+</div>

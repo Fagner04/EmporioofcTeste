@@ -1,0 +1,65 @@
+{% comment %}
+  Teste final - Adicione {% render 'test-fix-complete' %} ao template do produto
+{% endcomment %}
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; margin: 10px 0; border-radius: 10px; font-family: Arial, sans-serif;">
+  <h3 style="margin: 0 0 10px 0;">🎯 TESTE FINAL - Correção Completa</h3>
+  
+  {% if product %}
+    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <strong>📦 Produto:</strong> {{ product.title }}<br>
+      <strong>⚙️ Configuração:</strong> 
+      {% if settings.hide_sold_out_variants %}
+        <span style="background: #4caf50; padding: 2px 8px; border-radius: 3px;">✅ ATIVADA</span>
+      {% else %}
+        <span style="background: #f44336; padding: 2px 8px; border-radius: 3px;">❌ DESATIVADA</span>
+      {% endif %}
+    </div>
+    
+    {% if product.options_with_values.size > 0 %}
+      {% for option in product.options_with_values %}
+        <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 5px 0;">
+          <strong>{{ option.name }}:</strong><br>
+          
+          <div style="margin: 5px 0;">
+            <em>Comportamento atual:</em><br>
+            {% if settings.hide_sold_out_variants %}
+              {%- render 'filter-available-variants', option: option, product: product -%}
+              {%- assign values_to_show = available_values -%}
+              <span style="color: #ffeb3b;">🔥 FILTRANDO</span> - Mostrando apenas {{ values_to_show.size }} de {{ option.values.size }} valores
+            {% else %}
+              {%- assign values_to_show = option.values -%}
+              <span style="color: #4caf50;">✅ NORMAL</span> - Mostrando todos os {{ values_to_show.size }} valores
+            {% endif %}
+          </div>
+          
+          <div style="margin: 5px 0;">
+            <em>Valores que aparecerão:</em><br>
+            {% for value in values_to_show %}
+              <span style="background: rgba(255,255,255,0.2); padding: 2px 6px; margin: 2px; border-radius: 2px; font-size: 12px;">{{ value }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+    
+    <div style="background: rgba(76, 175, 80, 0.2); padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #4caf50;">
+      <strong>✅ STATUS:</strong><br>
+      {% if settings.hide_sold_out_variants %}
+        Funcionalidade ATIVA - Ocultando variantes esgotadas
+      {% else %}
+        Funcionalidade DESATIVA - Mostrando todas as variantes (comportamento normal)
+      {% endif %}
+    </div>
+    
+    <div style="background: rgba(255, 193, 7, 0.2); padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #ffc107;">
+      <strong>🧪 COMO TESTAR:</strong><br>
+      1. Ative/desative a configuração no admin<br>
+      2. Recarregue esta página<br>
+      3. Veja se o "Comportamento atual" muda<br>
+      4. Verifique se as bolinhas/tamanhos aparecem/somem conforme esperado
+    </div>
+  {% else %}
+    <p>⚠️ Este teste deve ser usado em uma página de produto</p>
+  {% endif %}
+</div>
