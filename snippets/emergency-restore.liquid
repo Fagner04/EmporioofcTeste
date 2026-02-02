@@ -1,0 +1,50 @@
+{% comment %}
+  EMERGÊNCIA: Restaurar funcionamento normal
+  Adicione {% render 'emergency-restore' %} ao template do produto
+{% endcomment %}
+
+<div style="background: #dc3545; color: white; padding: 15px; margin: 10px 0; border-radius: 8px; font-family: Arial, sans-serif;">
+  <h3 style="margin: 0 0 10px 0;">🚨 RESTAURAÇÃO DE EMERGÊNCIA</h3>
+  
+  {% if product %}
+    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <strong>📦 Produto:</strong> {{ product.title }}<br>
+      <strong>⚙️ Configuração:</strong> 
+      {% if settings.hide_sold_out_variants %}
+        <span style="background: #ffc107; color: #212529; padding: 2px 8px; border-radius: 3px;">⚠️ ATIVADA</span>
+      {% else %}
+        <span style="background: #28a745; padding: 2px 8px; border-radius: 3px;">✅ DESATIVADA</span>
+      {% endif %}
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; margin: 10px 0;">
+      <strong>🔍 DIAGNÓSTICO:</strong><br>
+      {% if product.options_with_values.size > 0 %}
+        {% for option in product.options_with_values %}
+          <div style="margin: 5px 0; padding: 5px; background: rgba(255,255,255,0.1); border-radius: 3px;">
+            <strong>{{ option.name }}:</strong> {{ option.values.size }} valores<br>
+            <small>Valores: {{ option.values | join: ', ' }}</small>
+          </div>
+        {% endfor %}
+      {% else %}
+        <span style="color: #ffeb3b;">⚠️ Produto não tem opções (cores/tamanhos)</span>
+      {% endif %}
+    </div>
+    
+    <div style="background: rgba(255, 193, 7, 0.3); padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #ffc107;">
+      <strong>🔧 SOLUÇÕES IMEDIATAS:</strong><br>
+      1. <strong>DESATIVE</strong> a configuração no admin temporariamente<br>
+      2. <strong>RECARREGUE</strong> a página (Ctrl+F5)<br>
+      3. <strong>VERIFIQUE</strong> se as bolinhas/tamanhos voltaram<br>
+      4. <strong>ME INFORME</strong> o resultado
+    </div>
+    
+    <div style="background: rgba(220, 53, 69, 0.3); padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #dc3545;">
+      <strong>🚨 SE NADA APARECER:</strong><br>
+      Pode ser que o produto não tenha variantes configuradas corretamente.<br>
+      Verifique no Admin → Produtos → {{ product.title }} → Variantes
+    </div>
+  {% else %}
+    <p>⚠️ Este snippet deve ser usado em uma página de produto</p>
+  {% endif %}
+</div>
